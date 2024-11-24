@@ -1,4 +1,4 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <vector>
 #include <locale.h>
 #include <string>
@@ -8,19 +8,19 @@
 
 using namespace std;
 
-class Teacher { //Здесь хранятся преподаватели: имя, интервалы занятости, кол-во занятий, которые должен провести
+class Teacher { //Р—РґРµСЃСЊ С…СЂР°РЅСЏС‚СЃСЏ РїСЂРµРїРѕРґР°РІР°С‚РµР»Рё: РёРјСЏ, РёРЅС‚РµСЂРІР°Р»С‹ Р·Р°РЅСЏС‚РѕСЃС‚Рё, РєРѕР»-РІРѕ Р·Р°РЅСЏС‚РёР№, РєРѕС‚РѕСЂС‹Рµ РґРѕР»Р¶РµРЅ РїСЂРѕРІРµСЃС‚Рё
     public:
         string name;
-        vector<pair<int, int>> busy_intervals; // Занятые интервалы времени
-        int need_to_teach; // Количество пар, которые нужно провести
-        int assigned_lessons; //Количество назначенных пар
+        vector<pair<int, int>> busy_intervals; // Р—Р°РЅСЏС‚С‹Рµ РёРЅС‚РµСЂРІР°Р»С‹ РІСЂРµРјРµРЅРё
+        int need_to_teach; // РљРѕР»РёС‡РµСЃС‚РІРѕ РїР°СЂ, РєРѕС‚РѕСЂС‹Рµ РЅСѓР¶РЅРѕ РїСЂРѕРІРµСЃС‚Рё
+        int assigned_lessons; //РљРѕР»РёС‡РµСЃС‚РІРѕ РЅР°Р·РЅР°С‡РµРЅРЅС‹С… РїР°СЂ
         Teacher(string n,  int classes)
             : name(n), need_to_teach(classes), assigned_lessons(0) {}
 };
 
 class Timetable {
 public:
-    vector<string> lessons; //Вектор: номер пары- имя преподавателя.
+    vector<string> lessons; //Р’РµРєС‚РѕСЂ: РЅРѕРјРµСЂ РїР°СЂС‹- РёРјСЏ РїСЂРµРїРѕРґР°РІР°С‚РµР»СЏ.
     Timetable(int N) : lessons(N, "null") {}
 
     bool is_free(int lesson_num) const {
@@ -36,7 +36,7 @@ public:
     }
 };
 
-// Функция для проверки, может ли преподаватель вести пару в данное время
+// Р¤СѓРЅРєС†РёСЏ РґР»СЏ РїСЂРѕРІРµСЂРєРё, РјРѕР¶РµС‚ Р»Рё РїСЂРµРїРѕРґР°РІР°С‚РµР»СЊ РІРµСЃС‚Рё РїР°СЂСѓ РІ РґР°РЅРЅРѕРµ РІСЂРµРјСЏ
 bool can_teach(const Teacher& teacher, int lesson_num) {
     for (const auto& interval : teacher.busy_intervals) {
         if (lesson_num >= interval.first  && lesson_num <= interval.second) {
@@ -47,9 +47,9 @@ bool can_teach(const Teacher& teacher, int lesson_num) {
 }
 
 bool backtrack_schedule(vector<Teacher>& teachers, Timetable& timetable, int current_lesson, int N) {
-    // Базовый случай: все пары распределены
+    // Р‘Р°Р·РѕРІС‹Р№ СЃР»СѓС‡Р°Р№: РІСЃРµ РїР°СЂС‹ СЂР°СЃРїСЂРµРґРµР»РµРЅС‹
     if (current_lesson > N) {
-        // Проверяем, все ли преподаватели получили нужное количество пар
+        // РџСЂРѕРІРµСЂСЏРµРј, РІСЃРµ Р»Рё РїСЂРµРїРѕРґР°РІР°С‚РµР»Рё РїРѕР»СѓС‡РёР»Рё РЅСѓР¶РЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїР°СЂ
         for (const Teacher& teacher : teachers) {
             if (teacher.assigned_lessons != teacher.need_to_teach) {
                 return false;
@@ -58,26 +58,26 @@ bool backtrack_schedule(vector<Teacher>& teachers, Timetable& timetable, int cur
         return true;
     }
 
-    // Если текущая пара уже назначена, переходим к следующей
+    // Р•СЃР»Рё С‚РµРєСѓС‰Р°СЏ РїР°СЂР° СѓР¶Рµ РЅР°Р·РЅР°С‡РµРЅР°, РїРµСЂРµС…РѕРґРёРј Рє СЃР»РµРґСѓСЋС‰РµР№
     if (!timetable.is_free(current_lesson)) {
         return backtrack_schedule(teachers, timetable, current_lesson + 1, N);
     }
 
-    // Пробуем назначить каждого преподавателя на текущую пару
+    // РџСЂРѕР±СѓРµРј РЅР°Р·РЅР°С‡РёС‚СЊ РєР°Р¶РґРѕРіРѕ РїСЂРµРїРѕРґР°РІР°С‚РµР»СЏ РЅР° С‚РµРєСѓС‰СѓСЋ РїР°СЂСѓ
     for (Teacher& teacher : teachers) {
-        // Проверяем, может ли преподаватель взять ещё пары и доступен ли он в это время
+        // РџСЂРѕРІРµСЂСЏРµРј, РјРѕР¶РµС‚ Р»Рё РїСЂРµРїРѕРґР°РІР°С‚РµР»СЊ РІР·СЏС‚СЊ РµС‰С‘ РїР°СЂС‹ Рё РґРѕСЃС‚СѓРїРµРЅ Р»Рё РѕРЅ РІ СЌС‚Рѕ РІСЂРµРјСЏ
         if (teacher.assigned_lessons < teacher.need_to_teach && can_teach(teacher, current_lesson)) {
-            // Пробуем назначить преподавателя
+            // РџСЂРѕР±СѓРµРј РЅР°Р·РЅР°С‡РёС‚СЊ РїСЂРµРїРѕРґР°РІР°С‚РµР»СЏ
             timetable.assign_lesson(current_lesson, teacher.name);
             teacher.assigned_lessons++;
 
-            // Рекурсивно пробуем составить оставшееся расписание
+            // Р РµРєСѓСЂСЃРёРІРЅРѕ РїСЂРѕР±СѓРµРј СЃРѕСЃС‚Р°РІРёС‚СЊ РѕСЃС‚Р°РІС€РµРµСЃСЏ СЂР°СЃРїРёСЃР°РЅРёРµ
             if (backtrack_schedule(teachers, timetable, current_lesson + 1, N)) {
                 return true;
             }
 
 
-            // Если не получилось, отменяем назначение (backtrack)
+            // Р•СЃР»Рё РЅРµ РїРѕР»СѓС‡РёР»РѕСЃСЊ, РѕС‚РјРµРЅСЏРµРј РЅР°Р·РЅР°С‡РµРЅРёРµ (backtrack)
             timetable.unassign_lesson(current_lesson);
             teacher.assigned_lessons--;
         }
@@ -88,9 +88,9 @@ bool backtrack_schedule(vector<Teacher>& teachers, Timetable& timetable, int cur
 
 void print_timetable(const Timetable& timetable, vector<Teacher>& teachers, int N) {
     setlocale(LC_ALL, "Russian");
-    cout << "\nРасписание:\n";
+    cout << "\nР Р°СЃРїРёСЃР°РЅРёРµ:\n";
     cout << "-------------------------\n";
-    cout << "Пара | Преподаватель\n";
+    cout << "РџР°СЂР° | РџСЂРµРїРѕРґР°РІР°С‚РµР»СЊ\n";
     cout << "-------------------------\n";
 
     for (int i = 0; i < N; ++i) {
@@ -99,7 +99,7 @@ void print_timetable(const Timetable& timetable, vector<Teacher>& teachers, int 
             cout  << timetable.lessons[i];
         }
         else {
-            cout << "Не назначено";
+            cout << "РќРµ РЅР°Р·РЅР°С‡РµРЅРѕ";
         }
         cout << endl;
     }
@@ -107,41 +107,63 @@ void print_timetable(const Timetable& timetable, vector<Teacher>& teachers, int 
 }
 
 bool validate_input(int N, vector<Teacher>& teachers){
-    return 1;
+    int total_required = 0;
+    for (const Teacher& teacher : teachers) {
+        total_required += teacher.need_to_teach;
+    }
+
+    if (total_required != N) {
+        cout << "РћС€РёР±РєР°: РћР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ С‚СЂРµР±СѓРµРјС‹С… РїР°СЂ (" << total_required
+            << ") РЅРµ СЃРѕРІРїР°РґР°РµС‚ СЃ РєРѕР»РёС‡РµСЃС‚РІРѕРј РґРѕСЃС‚СѓРїРЅС‹С… РїР°СЂ (" << N << ")\n";
+        return false;
+    }
+
+    // РџСЂРѕРІРµСЂСЏРµРј РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ Р·Р°РЅСЏС‚С‹С… РїР°СЂ
+    for (const Teacher& teacher : teachers) {
+        for (auto busy_time : teacher.busy_intervals) {
+            if (busy_time.first < 1 || busy_time.first > N || busy_time.second < 1 || busy_time.second > N) {
+                cout << "РћС€РёР±РєР°: РќРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ РЅРѕРјРµСЂ РїР°СЂС‹ РґР»СЏ РїСЂРµРїРѕРґР°РІР°С‚РµР»СЏ "
+                    << teacher.name << "\n";
+                return false;
+            }
+        }
+    }
+
+    return true;
 }
 
-/*int main() {
+int main() {
     setlocale(LC_ALL, "Russian");
 
-    int N;  // Общее количество пар
-    int M;  // Количество преподавателей
+    int N;  // РћР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїР°СЂ
+    int M;  // РљРѕР»РёС‡РµСЃС‚РІРѕ РїСЂРµРїРѕРґР°РІР°С‚РµР»РµР№
 
-    cout << "Введите общее количество пар: \n";
+    cout << "Р’РІРµРґРёС‚Рµ РѕР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїР°СЂ: \n";
     cin >> N;
 
-    cout << "Введите количество преподавателей/предметов: \n";
+    cout << "Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїСЂРµРїРѕРґР°РІР°С‚РµР»РµР№/РїСЂРµРґРјРµС‚РѕРІ: \n";
     cin >> M;
 
     vector<Teacher> teachers;
 
-    // Ввод данных о преподавателях
+    // Р’РІРѕРґ РґР°РЅРЅС‹С… Рѕ РїСЂРµРїРѕРґР°РІР°С‚РµР»СЏС…
     for (int i = 0; i < M; ++i) {
         int n_i;
         string name;
-        cout << "\nПреподаватель/Предмет " ;
+        cout << "\nРџСЂРµРїРѕРґР°РІР°С‚РµР»СЊ/РџСЂРµРґРјРµС‚ " ;
         cin >> name;
-        cout << "Введите количество требуемых пар: ";
+        cout << "Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ С‚СЂРµР±СѓРµРјС‹С… РїР°СЂ: ";
         cin >> n_i ;
 
         Teacher teacher(name, n_i );
 
         int intervals;
-        cout << "Введите количество интервалов занятости: ";
+        cout << "Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ РёРЅС‚РµСЂРІР°Р»РѕРІ Р·Р°РЅСЏС‚РѕСЃС‚Рё: ";
         cin >> intervals;
 
         for (int j = 0; j < intervals; ++j) {
             int start, end;
-            cout << "Введите интервал занятости " << j + 1 << " (начало конец). Если занятость одна пара, то начало и конец задавайте одинаковым значением: ";
+            cout << "Р’РІРµРґРёС‚Рµ РёРЅС‚РµСЂРІР°Р» Р·Р°РЅСЏС‚РѕСЃС‚Рё " << j + 1 << " (РЅР°С‡Р°Р»Рѕ РєРѕРЅРµС†). Р•СЃР»Рё Р·Р°РЅСЏС‚РѕСЃС‚СЊ РѕРґРЅР° РїР°СЂР°, С‚Рѕ РЅР°С‡Р°Р»Рѕ Рё РєРѕРЅРµС† Р·Р°РґР°РІР°Р№С‚Рµ РѕРґРёРЅР°РєРѕРІС‹Рј Р·РЅР°С‡РµРЅРёРµРј: ";
             cin >> start >> end;
             teacher.busy_intervals.push_back({ start, end });
         }
@@ -150,21 +172,21 @@ bool validate_input(int N, vector<Teacher>& teachers){
     }
 
   
-    // Проверяем корректность входных данных
+    // РџСЂРѕРІРµСЂСЏРµРј РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ РІС…РѕРґРЅС‹С… РґР°РЅРЅС‹С…
     if (!validate_input(N, teachers)) {
         return 1;
     }
 
     Timetable timetable(N);
 
-    // Пытаемся составить расписание
+    // РџС‹С‚Р°РµРјСЃСЏ СЃРѕСЃС‚Р°РІРёС‚СЊ СЂР°СЃРїРёСЃР°РЅРёРµ
     if (backtrack_schedule(teachers, timetable, 1, N)) {
-        cout << "\nРасписание успешно составлено!\n";
+        cout << "\nР Р°СЃРїРёСЃР°РЅРёРµ СѓСЃРїРµС€РЅРѕ СЃРѕСЃС‚Р°РІР»РµРЅРѕ!\n";
         print_timetable(timetable, teachers , N);
     }
     else {
-        cout << "\nНевозможно составить расписание с заданными ограничениями!\n";
+        cout << "\nРќРµРІРѕР·РјРѕР¶РЅРѕ СЃРѕСЃС‚Р°РІРёС‚СЊ СЂР°СЃРїРёСЃР°РЅРёРµ СЃ Р·Р°РґР°РЅРЅС‹РјРё РѕРіСЂР°РЅРёС‡РµРЅРёСЏРјРё!\n";
     }
 
     return 0;
-} */
+} 
